@@ -1,0 +1,9 @@
+VIEW SkillMatrix_PersonnelSkills AS SELECT
+  DBPersonnelSkills_0.personnel_ID,
+  DBPersonnelSkills_0.skill_ID,
+  DBPersonnelSkills_0.proficiencyLevel
+FROM PersonnelSkills AS DBPersonnelSkills_0
+WITH ASSOCIATIONS (
+  MANY TO ONE JOIN SkillMatrix_Personnels AS personnel ON (personnel.ID = personnel_ID),
+  MANY TO ONE JOIN SkillMatrix_Skills AS skill ON (skill.ID = skill_ID)
+)

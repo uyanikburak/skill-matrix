@@ -1,0 +1,739 @@
+{
+  "definitions": {
+    "Teams": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 10
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "headOfTeam": {
+          "type": {
+            "ref": [
+              "Personnels",
+              "ID"
+            ]
+          }
+        },
+        "toPersonnels": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "Personnels",
+          "on": [
+            {
+              "ref": [
+                "toPersonnels",
+                "toTeam"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "toHeadOfTeam": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "Personnels",
+          "on": [
+            {
+              "ref": [
+                "toHeadOfTeam",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "headOfTeam"
+              ]
+            }
+          ]
+        },
+        "toSkills": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "Skills",
+          "on": [
+            {
+              "ref": [
+                "toSkills",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "ID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "Personnels": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "firstName": {
+          "type": "cds.String",
+          "length": 50
+        },
+        "lastName": {
+          "type": "cds.String",
+          "length": 50
+        },
+        "email": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "userRole": {
+          "type": "cds.String",
+          "length": 1
+        },
+        "teamID": {
+          "type": {
+            "ref": [
+              "Teams",
+              "ID"
+            ]
+          },
+          "length": 10
+        },
+        "toTeam": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "Teams",
+          "on": [
+            {
+              "ref": [
+                "toTeam",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "teamID"
+              ]
+            }
+          ]
+        },
+        "toSkills": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "PersonnelSkills",
+          "on": [
+            {
+              "ref": [
+                "toSkills",
+                "personnel"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "Skills": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "description": {
+          "type": "cds.String",
+          "length": 500
+        },
+        "fieldID": {
+          "type": "cds.UUID"
+        },
+        "toField": {
+          "type": "cds.Association",
+          "target": "Fields",
+          "on": [
+            {
+              "ref": [
+                "toField",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "fieldID"
+              ]
+            }
+          ]
+        },
+        "toTeams": {
+          "type": "cds.Association",
+          "target": "Teams",
+          "on": [
+            {
+              "ref": [
+                "toTeams",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "ID"
+              ]
+            }
+          ]
+        },
+        "toPersonnels": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "PersonnelSkills",
+          "on": [
+            {
+              "ref": [
+                "toPersonnels",
+                "skill"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "Fields": {
+      "kind": "entity",
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "description": {
+          "type": "cds.String",
+          "length": 500
+        },
+        "toSkills": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "Skills",
+          "on": [
+            {
+              "ref": [
+                "toSkills",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "ID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "PersonnelSkills": {
+      "kind": "entity",
+      "elements": {
+        "personnel": {
+          "key": true,
+          "type": "cds.Association",
+          "target": "Personnels",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "skill": {
+          "key": true,
+          "type": "cds.Association",
+          "target": "Skills",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "proficiencyLevel": {
+          "type": "cds.Integer",
+          "enum": {
+            "expert": {
+              "val": 5
+            },
+            "highCompetence": {
+              "val": 4
+            },
+            "experienced": {
+              "val": 3
+            },
+            "lowCompetence": {
+              "val": 2
+            },
+            "learning": {
+              "val": 1
+            }
+          }
+        }
+      }
+    },
+    "ResultRow": {
+      "kind": "type",
+      "elements": {
+        "EmployeeName": {
+          "type": "cds.String"
+        },
+        "TeamName": {
+          "type": "cds.String"
+        },
+        "skillName": {
+          "items": {
+            "type": "cds.String"
+          }
+        }
+      }
+    },
+    "SkillMatrix": {
+      "@source": "srv/data-provider.cds",
+      "kind": "service"
+    },
+    "SkillMatrix.Personnels": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "Personnels"
+          ],
+          "as": "DBPersonnels"
+        }
+      },
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "firstName": {
+          "type": "cds.String",
+          "length": 50
+        },
+        "lastName": {
+          "type": "cds.String",
+          "length": 50
+        },
+        "email": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "userRole": {
+          "type": "cds.String",
+          "length": 1
+        },
+        "teamID": {
+          "type": {
+            "ref": [
+              "Teams",
+              "ID"
+            ]
+          },
+          "length": 10
+        },
+        "toTeam": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "SkillMatrix.Teams",
+          "on": [
+            {
+              "ref": [
+                "toTeam",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "teamID"
+              ]
+            }
+          ]
+        },
+        "toSkills": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "SkillMatrix.PersonnelSkills",
+          "on": [
+            {
+              "ref": [
+                "toSkills",
+                "personnel"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "SkillMatrix.PersonnelSkills": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "PersonnelSkills"
+          ],
+          "as": "DBPersonnelSkills"
+        }
+      },
+      "elements": {
+        "personnel": {
+          "key": true,
+          "type": "cds.Association",
+          "target": "SkillMatrix.Personnels",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "skill": {
+          "key": true,
+          "type": "cds.Association",
+          "target": "SkillMatrix.Skills",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
+        },
+        "proficiencyLevel": {
+          "type": "cds.Integer",
+          "enum": {
+            "expert": {
+              "val": 5
+            },
+            "highCompetence": {
+              "val": 4
+            },
+            "experienced": {
+              "val": 3
+            },
+            "lowCompetence": {
+              "val": 2
+            },
+            "learning": {
+              "val": 1
+            }
+          }
+        }
+      }
+    },
+    "SkillMatrix.Teams": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "Teams"
+          ],
+          "as": "DBTeams"
+        }
+      },
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 10
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "headOfTeam": {
+          "type": {
+            "ref": [
+              "Personnels",
+              "ID"
+            ]
+          }
+        },
+        "toPersonnels": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "SkillMatrix.Personnels",
+          "on": [
+            {
+              "ref": [
+                "toPersonnels",
+                "toTeam"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        },
+        "toHeadOfTeam": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": 1
+          },
+          "target": "SkillMatrix.Personnels",
+          "on": [
+            {
+              "ref": [
+                "toHeadOfTeam",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "headOfTeam"
+              ]
+            }
+          ]
+        },
+        "toSkills": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "SkillMatrix.Skills",
+          "on": [
+            {
+              "ref": [
+                "toSkills",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "ID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "SkillMatrix.Skills": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "Skills"
+          ],
+          "as": "DBSkills"
+        }
+      },
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "description": {
+          "type": "cds.String",
+          "length": 500
+        },
+        "fieldID": {
+          "type": "cds.UUID"
+        },
+        "toField": {
+          "type": "cds.Association",
+          "target": "SkillMatrix.Fields",
+          "on": [
+            {
+              "ref": [
+                "toField",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "fieldID"
+              ]
+            }
+          ]
+        },
+        "toTeams": {
+          "type": "cds.Association",
+          "target": "SkillMatrix.Teams",
+          "on": [
+            {
+              "ref": [
+                "toTeams",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "ID"
+              ]
+            }
+          ]
+        },
+        "toPersonnels": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "SkillMatrix.PersonnelSkills",
+          "on": [
+            {
+              "ref": [
+                "toPersonnels",
+                "skill"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "SkillMatrix.Fields": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "Fields"
+          ],
+          "as": "DBFields"
+        }
+      },
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "name": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "description": {
+          "type": "cds.String",
+          "length": 500
+        },
+        "toSkills": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "SkillMatrix.Skills",
+          "on": [
+            {
+              "ref": [
+                "toSkills",
+                "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self",
+                "ID"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "SkillMatrix.getSkillMatrix": {
+      "kind": "function",
+      "returns": {
+        "items": {
+          "type": "cds.String"
+        }
+      }
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v4.9.8",
+    "flavor": "inferred"
+  },
+  "$version": "2.0"
+}

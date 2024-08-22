@@ -1,0 +1,10 @@
+VIEW SkillMatrix_Teams AS SELECT
+  DBTeams_0.ID,
+  DBTeams_0.name,
+  DBTeams_0.headOfTeam
+FROM Teams AS DBTeams_0
+WITH ASSOCIATIONS (
+  MANY TO MANY JOIN SkillMatrix_Personnels AS toPersonnels ON (ID = toPersonnels.teamID),
+  MANY TO ONE JOIN SkillMatrix_Personnels AS toHeadOfTeam ON (toHeadOfTeam.ID = headOfTeam),
+  MANY TO MANY JOIN SkillMatrix_Skills AS toSkills ON (toSkills.ID = ID)
+)

@@ -1,0 +1,11 @@
+VIEW SkillMatrix_Skills AS SELECT
+  DBSkills_0.ID,
+  DBSkills_0.name,
+  DBSkills_0.description,
+  DBSkills_0.fieldID
+FROM Skills AS DBSkills_0
+WITH ASSOCIATIONS (
+  MANY TO ONE JOIN SkillMatrix_Fields AS toField ON (toField.ID = fieldID),
+  MANY TO ONE JOIN SkillMatrix_Teams AS toTeams ON (toTeams.ID = ID),
+  MANY TO MANY JOIN SkillMatrix_PersonnelSkills AS toPersonnels ON (toPersonnels.skill_ID = ID)
+)

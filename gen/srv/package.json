@@ -1,0 +1,56 @@
+{
+  "name": "skill-matrix",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^1",
+    "@sap/cds": "^7",
+    "@sap/cds-hana": "^2",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
+    "@sap/hana-client": "^2.21.28",
+    "@sap/xssec": "^3.6.1",
+    "express": "^4",
+    "hdb": "^0.19.8",
+    "install": "^0.13.0",
+    "npm": "^10.8.2",
+    "passport": "^0.7.0"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^7",
+    "@sap/ux-specification": "^1.120.15",
+    "@types/chai": "^4.3.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.1.0",
+    "cds2types": "^3.0.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.5.4"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-skill_matrix": "cds watch --open skill_matrix/webapp/index.html?sap-ui-xx-viewCache=false",
+    "undeploy": "cf undeploy skill-matrix --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-skill-matrix-ui": "cds watch --open skill-matrix-ui/webapp/index.html?sap-ui-xx-viewCache=false",
+    "hana-deploy": "cds deploy --to hana:skill-matrix-db-buya"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana"
+      },
+      "[hybrid]": {
+        "db": {
+          "kind": "hana"
+        }
+      }
+    }
+  },
+  "cov2ap": {
+    "plugin": true
+  }
+}

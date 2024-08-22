@@ -1,0 +1,12 @@
+COLUMN TABLE Personnels (
+  ID NVARCHAR(36) NOT NULL,
+  firstName NVARCHAR(50),
+  lastName NVARCHAR(50),
+  email NVARCHAR(100),
+  userRole NVARCHAR(1),
+  teamID NVARCHAR(10),
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN Teams AS toTeam ON (toTeam.ID = teamID),
+  MANY TO MANY JOIN PersonnelSkills AS toSkills ON (toSkills.personnel_ID = ID)
+)

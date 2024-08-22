@@ -1,0 +1,9 @@
+COLUMN TABLE PersonnelSkills (
+  personnel_ID NVARCHAR(36) NOT NULL,
+  skill_ID NVARCHAR(36) NOT NULL,
+  proficiencyLevel INTEGER,
+  PRIMARY KEY(personnel_ID, skill_ID)
+) WITH ASSOCIATIONS (
+  MANY TO ONE JOIN Personnels AS personnel ON (personnel.ID = personnel_ID),
+  MANY TO ONE JOIN Skills AS skill ON (skill.ID = skill_ID)
+)

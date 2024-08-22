@@ -1,0 +1,10 @@
+COLUMN TABLE Teams (
+  ID NVARCHAR(10) NOT NULL,
+  name NVARCHAR(100),
+  headOfTeam NVARCHAR(36),
+  PRIMARY KEY(ID)
+) WITH ASSOCIATIONS (
+  MANY TO MANY JOIN Personnels AS toPersonnels ON (ID = toPersonnels.teamID),
+  MANY TO ONE JOIN Personnels AS toHeadOfTeam ON (toHeadOfTeam.ID = headOfTeam),
+  MANY TO MANY JOIN Skills AS toSkills ON (toSkills.ID = ID)
+)
