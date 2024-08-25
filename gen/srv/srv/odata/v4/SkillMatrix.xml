@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="SkillMatrix" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Personnels" EntityType="SkillMatrix.Personnels">
+          <NavigationPropertyBinding Path="toTeam" Target="Teams"/>
+          <NavigationPropertyBinding Path="toSkills" Target="PersonnelSkills"/>
+        </EntitySet>
+        <EntitySet Name="PersonnelSkills" EntityType="SkillMatrix.PersonnelSkills">
+          <NavigationPropertyBinding Path="personnel" Target="Personnels"/>
+          <NavigationPropertyBinding Path="skill" Target="Skills"/>
+        </EntitySet>
+        <EntitySet Name="Teams" EntityType="SkillMatrix.Teams">
+          <NavigationPropertyBinding Path="toPersonnels" Target="Personnels"/>
+          <NavigationPropertyBinding Path="toHeadOfTeam" Target="Personnels"/>
+          <NavigationPropertyBinding Path="toSkills" Target="Skills"/>
+        </EntitySet>
+        <EntitySet Name="Skills" EntityType="SkillMatrix.Skills">
+          <NavigationPropertyBinding Path="toField" Target="Fields"/>
+          <NavigationPropertyBinding Path="toTeams" Target="Teams"/>
+          <NavigationPropertyBinding Path="toPersonnels" Target="PersonnelSkills"/>
+        </EntitySet>
+        <EntitySet Name="Fields" EntityType="SkillMatrix.Fields">
+          <NavigationPropertyBinding Path="toSkills" Target="Skills"/>
+        </EntitySet>
+        <FunctionImport Name="getSkillMatrix" Function="SkillMatrix.getSkillMatrix"/>
+      </EntityContainer>
+      <EntityType Name="Personnels">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="firstName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="lastName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="email" Type="Edm.String" MaxLength="100"/>
+        <Property Name="userRole" Type="Edm.String" MaxLength="1"/>
+        <Property Name="teamID" Type="Edm.String" MaxLength="10"/>
+        <NavigationProperty Name="toTeam" Type="SkillMatrix.Teams" Partner="toPersonnels">
+          <ReferentialConstraint Property="teamID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <NavigationProperty Name="toSkills" Type="Collection(SkillMatrix.PersonnelSkills)" Partner="personnel"/>
+      </EntityType>
+      <EntityType Name="PersonnelSkills">
+        <Key>
+          <PropertyRef Name="personnel_ID"/>
+          <PropertyRef Name="skill_ID"/>
+        </Key>
+        <NavigationProperty Name="personnel" Type="SkillMatrix.Personnels" Partner="toSkills">
+          <ReferentialConstraint Property="personnel_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="personnel_ID" Type="Edm.Guid" Nullable="false"/>
+        <NavigationProperty Name="skill" Type="SkillMatrix.Skills" Partner="toPersonnels">
+          <ReferentialConstraint Property="skill_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="skill_ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="proficiencyLevel" Type="Edm.Int32"/>
+      </EntityType>
+      <EntityType Name="Teams">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="100"/>
+        <Property Name="headOfTeam" Type="Edm.Guid"/>
+        <NavigationProperty Name="toPersonnels" Type="Collection(SkillMatrix.Personnels)" Partner="toTeam"/>
+        <NavigationProperty Name="toHeadOfTeam" Type="SkillMatrix.Personnels">
+          <ReferentialConstraint Property="headOfTeam" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <NavigationProperty Name="toSkills" Type="Collection(SkillMatrix.Skills)"/>
+      </EntityType>
+      <EntityType Name="Skills">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="100"/>
+        <Property Name="description" Type="Edm.String" MaxLength="500"/>
+        <Property Name="fieldID" Type="Edm.Guid"/>
+        <NavigationProperty Name="toField" Type="SkillMatrix.Fields">
+          <ReferentialConstraint Property="fieldID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <NavigationProperty Name="toTeams" Type="SkillMatrix.Teams">
+          <ReferentialConstraint Property="ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <NavigationProperty Name="toPersonnels" Type="Collection(SkillMatrix.PersonnelSkills)" Partner="skill"/>
+      </EntityType>
+      <EntityType Name="Fields">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="100"/>
+        <Property Name="description" Type="Edm.String" MaxLength="500"/>
+        <NavigationProperty Name="toSkills" Type="Collection(SkillMatrix.Skills)"/>
+      </EntityType>
+      <Function Name="getSkillMatrix" IsBound="false" IsComposable="false">
+        <ReturnType Type="Collection(Edm.String)" Nullable="true"/>
+      </Function>
+      <Annotations Target="SkillMatrix.Personnels/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="SkillMatrix.PersonnelSkills/proficiencyLevel">
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="expert"/>
+              <PropertyValue Property="Value" Int="5"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="highCompetence"/>
+              <PropertyValue Property="Value" Int="4"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="experienced"/>
+              <PropertyValue Property="Value" Int="3"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="lowCompetence"/>
+              <PropertyValue Property="Value" Int="2"/>
+            </Record>
+            <Record Type="Validation.AllowedValue">
+              <Annotation Term="Core.SymbolicName" String="learning"/>
+              <PropertyValue Property="Value" Int="1"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="SkillMatrix.Skills/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="SkillMatrix.Fields/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

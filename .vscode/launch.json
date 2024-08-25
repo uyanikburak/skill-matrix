@@ -20,7 +20,7 @@
       ]
     },
     {
-      "command": "cds-ts watch --profile hybrid",
+      "command": "cds-ts watch --profile hybrid --open skillmatrixui/webapp/index.html?sap-ui-xx-viewCache=false",
       "name": "watch hybrid",
       "request": "launch",
       "type": "node-terminal",

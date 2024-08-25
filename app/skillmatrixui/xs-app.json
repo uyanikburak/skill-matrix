@@ -3,11 +3,15 @@
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/skill-matrix/(.*)$",
+      "source": "^/odata/v2/skill-matrix/(.*)$",
       "target": "/skill-matrix/$1",
-      "destination": "skill-matrix-srv-api",
-      "authenticationType": "xsuaa",
-      "csrfProtection": false
+      "destination": "srv-api",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/user-api(.*)",
+      "target": "$1",
+      "service": "sap-approuter-userapi"
     },
     {
       "source": "^/resources/(.*)$",

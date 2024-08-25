@@ -4,8 +4,11 @@
   "scopes": [],
   "attributes": [],
   "role-templates": [],
-  "authorities-inheritance": false,
   "oauth2-configuration": {
-    "allowedproviders": []
+    "redirect-uris": [
+      "https://port1299-workspaces-ws-9fzmf.eu10.applicationstudio.cloud.sap/login/callback",
+      "https://*.eu10.hana.ondemand.com/**",
+      "http://localhost:1299/login/callback"
+    ]
   }
 }

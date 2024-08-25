@@ -1,23 +1,11 @@
 {
-  "welcomeFile": "app/index.html",
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/app/(.*)$",
-      "target": "$1",
-      "localDir": ".",
-      "cacheControl": "no-cache, no-store, must-revalidate"
-    },
-    {
-      "source": "^/appconfig/",
-      "localDir": ".",
-      "cacheControl": "no-cache, no-store, must-revalidate"
-    },
-    {
-      "source": "^/(.*)$",
-      "target": "$1",
+      "source": "^/odata/v2/skill-matrix/(.*)$",
       "destination": "srv-api",
-      "csrfProtection": true
+      "authenticationType": "xsuaa"
     }
-  ]
+  ],
+  "welcomeFile": "/skillmatrixui"
 }

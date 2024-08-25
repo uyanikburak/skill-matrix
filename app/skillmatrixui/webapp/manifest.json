@@ -17,11 +17,11 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/skill-matrix/",
+        "uri": "v2/odata/v4/skill-matrix/",
         "type": "OData",
         "settings": {
           "annotations": [],
-          "odataVersion": "4.0"
+          "odataVersion": "2.0"
         }
       }
     }

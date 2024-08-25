@@ -2,13 +2,12 @@ import { ApplicationService, connect, Service, Request, TypedRequest, utils, run
 import {IFields, IPersonnelSkills, IPersonnels,ISkills,ITeams, IResultRow} from "./types/data.types"
 export default class SkillMatrix extends ApplicationService {
     async init(): Promise<void> {
-
         const { Personnels, PersonnelSkills, Skills, Teams } = this.entities;
 
         this.on('getSkillMatrix', async (): Promise<IResultRow[]> => {
             // Fetch data from the relevant entities
             const personnels: IPersonnels[] = await SELECT.from(Personnels).columns('ID', 'firstName', 'lastName', 'teamID');
-            const personnelSkills: IPersonnelSkills[] = await SELECT.from(PersonnelSkills).columns('personnel', 'skill', 'proficiencyLevel');
+            const personnelSkills: IPersonnelSkills[] = await SELECT.from(PersonnelSkills).columns('personnel_ID', 'skill_ID', 'proficiencyLevel');
             const skills: ISkills[] = await SELECT.from(Skills).columns('ID', 'name');
             const teams: ITeams[] = await SELECT.from(Teams).columns('ID', 'name');
     

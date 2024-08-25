@@ -2,7 +2,6 @@ import { ApplicationService, connect, Service, Request, TypedRequest, utils, run
 import {IFields, IPersonnelSkills, IPersonnels,ISkills,ITeams, IResultRow} from "./types/data.types"
 export default class SkillMatrix extends ApplicationService {
     async init(): Promise<void> {
-
         const { Personnels, PersonnelSkills, Skills, Teams } = this.entities;
 
         this.on('getSkillMatrix', async (): Promise<IResultRow[]> => {

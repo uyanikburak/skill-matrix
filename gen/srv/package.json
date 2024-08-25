@@ -1,56 +1,37 @@
 {
-  "name": "skill-matrix",
+  "name": "com.ndbs.skillmatrixui",
   "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@cap-js/hana": "^1",
-    "@sap/cds": "^7",
-    "@sap/cds-hana": "^2",
-    "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
-    "@sap/hana-client": "^2.21.28",
-    "@sap/xssec": "^3.6.1",
-    "express": "^4",
-    "hdb": "^0.19.8",
-    "install": "^0.13.0",
-    "npm": "^10.8.2",
-    "passport": "^0.7.0"
+  "description": "UI5 Application: com.ndbs.skillmatrixui",
+  "author": "Burak Uyanik",
+  "license": "Apache-2.0",
+  "scripts": {
+    "clean": "rimraf dist coverage",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "build:opt": "ui5 build self-contained --clean-dest --all",
+    "start": "ui5 serve --port 8080 -o index.html",
+    "watch-skillmatrixui": "cds-ts watch --profile hybrid --open skillmatrixui/webapp/index.html?sap-ui-xx-viewCache=false",
+    "undeploy": "cf undeploy skill-matrix --delete-services --delete-service-keys --delete-service-brokers",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
   "devDependencies": {
+    "@cap-js/cds-types": "^0.6.5",
     "@cap-js/sqlite": "^1",
-    "@sap/cds-dk": "^7",
-    "@sap/ux-specification": "^1.120.15",
-    "@types/chai": "^4.3.17",
+    "@sap/cds-dk": "^8",
+    "@sap/ux-specification": "^1.120.1",
+    "@types/chai": "^4.3.14",
     "@types/express": "^4.17.21",
-    "@types/node": "^22.1.0",
-    "cds2types": "^3.0.0",
-    "rimraf": "^5.0.5",
-    "typescript": "^5.5.4"
+    "@types/node": "^20.12.4",
+    "rimraf": "^5.0.5"
   },
-  "scripts": {
-    "start": "cds-serve",
-    "watch-skill_matrix": "cds watch --open skill_matrix/webapp/index.html?sap-ui-xx-viewCache=false",
-    "undeploy": "cf undeploy skill-matrix --delete-services --delete-service-keys --delete-service-brokers",
-    "build": "rimraf resources mta_archives && mbt build --mtar archive",
-    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
-    "watch-skill-matrix-ui": "cds watch --open skill-matrix-ui/webapp/index.html?sap-ui-xx-viewCache=false",
-    "hana-deploy": "cds deploy --to hana:skill-matrix-db-buya"
-  },
-  "cds": {
-    "requires": {
-      "db": {
-        "kind": "hana"
-      },
-      "[hybrid]": {
-        "db": {
-          "kind": "hana"
-        }
-      }
-    }
-  },
-  "cov2ap": {
-    "plugin": true
+  "dependencies": {
+    "@cap-js-community/odata-v2-adapter": "^1.12.2",
+    "@sap-cloud-sdk/mail-client": "^3.9.0",
+    "@sap/cds": "^8",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
+    "@sap/xssec": "^3",
+    "exceljs": "^4.4.0",
+    "express": "^4",
+    "hdb": "^0.19.0",
+    "passport": "^0"
   }
 }
