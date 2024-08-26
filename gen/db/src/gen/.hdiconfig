@@ -3,9 +3,6 @@
     "csv": {
       "plugin_name": "com.sap.hana.di.tabledata.source"
     },
-    "hdbcalculationview": {
-      "plugin_name": "com.sap.hana.di.calculationview"
-    },
     "hdbconstraint": {
       "plugin_name": "com.sap.hana.di.constraint"
     },

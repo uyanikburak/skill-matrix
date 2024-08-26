@@ -1,0 +1,5 @@
+VIEW SkillMatrix_SkillMatrix AS SELECT
+  personnel_3.firstName,
+  skill_4.name AS skillName,
+  perskills_2.proficiencyLevel
+FROM ((((Personnels AS personnels_0 INNER JOIN Teams AS teams_1 ON teams_1.ID = personnels_0.teamID) INNER JOIN PersonnelSkills AS perskills_2 ON perskills_2.personnel_ID = perskills_2.personnel_ID) LEFT JOIN Personnels AS personnel_3 ON perskills_2.personnel_ID = personnel_3.ID) LEFT JOIN Skills AS skill_4 ON perskills_2.skill_ID = skill_4.ID)

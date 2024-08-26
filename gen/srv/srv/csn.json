@@ -326,6 +326,9 @@
             },
             "learning": {
               "val": 1
+            },
+            "noCompetence": {
+              "val": 0
             }
           }
         }
@@ -340,10 +343,24 @@
         "TeamName": {
           "type": "cds.String"
         },
-        "skillName": {
+        "SkillPairs": {
+          "items": {
+            "type": "SkillPair"
+          }
+        }
+      }
+    },
+    "SkillPair": {
+      "kind": "type",
+      "elements": {
+        "SkillName": {
           "items": {
             "type": "cds.String"
           }
+        },
+        "ProficiencyLevel": {
+          "type": "cds.Integer",
+          "notNull": false
         }
       }
     },
@@ -488,6 +505,9 @@
             },
             "learning": {
               "val": 1
+            },
+            "noCompetence": {
+              "val": 0
             }
           }
         }
@@ -725,14 +745,135 @@
     "SkillMatrix.getSkillMatrix": {
       "kind": "function",
       "returns": {
-        "items": {
-          "type": "cds.String"
+        "type": "ResultRow"
+      }
+    },
+    "SkillMatrix.SkillMatrix": {
+      "kind": "entity",
+      "query": {
+        "SELECT": {
+          "from": {
+            "join": "inner",
+            "args": [
+              {
+                "join": "inner",
+                "args": [
+                  {
+                    "ref": [
+                      "Personnels"
+                    ],
+                    "as": "personnels"
+                  },
+                  {
+                    "ref": [
+                      "Teams"
+                    ],
+                    "as": "teams"
+                  }
+                ],
+                "on": [
+                  {
+                    "ref": [
+                      "teams",
+                      "ID"
+                    ]
+                  },
+                  "=",
+                  {
+                    "ref": [
+                      "personnels",
+                      "teamID"
+                    ]
+                  }
+                ]
+              },
+              {
+                "ref": [
+                  "PersonnelSkills"
+                ],
+                "as": "perskills"
+              }
+            ],
+            "on": [
+              {
+                "ref": [
+                  "perskills",
+                  "personnel",
+                  "ID"
+                ]
+              },
+              "=",
+              {
+                "ref": [
+                  "personnel",
+                  "ID"
+                ]
+              }
+            ]
+          },
+          "columns": [
+            {
+              "key": true,
+              "ref": [
+                "personnel",
+                "firstName"
+              ]
+            },
+            {
+              "ref": [
+                "perskills",
+                "skill",
+                "name"
+              ],
+              "as": "skillName"
+            },
+            {
+              "ref": [
+                "perskills",
+                "proficiencyLevel"
+              ]
+            }
+          ]
+        }
+      },
+      "elements": {
+        "firstName": {
+          "key": true,
+          "type": "cds.String",
+          "length": 50
+        },
+        "skillName": {
+          "type": "cds.String",
+          "length": 100
+        },
+        "proficiencyLevel": {
+          "type": "cds.Integer",
+          "enum": {
+            "expert": {
+              "val": 5
+            },
+            "highCompetence": {
+              "val": 4
+            },
+            "experienced": {
+              "val": 3
+            },
+            "lowCompetence": {
+              "val": 2
+            },
+            "learning": {
+              "val": 1
+            },
+            "noCompetence": {
+              "val": 0
+            }
+          }
         }
       }
     }
   },
   "meta": {
-    "creator": "CDS Compiler v5.1.2",
+    "creator": "CDS Compiler v4.9.8",
     "flavor": "inferred"
   },
   "$version": "2.0"

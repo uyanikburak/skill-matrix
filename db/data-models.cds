@@ -40,7 +40,8 @@ entity Fields {
     key ID          : UUID;
         name        : String(100);
         description : String(500);
-        toSkills    : Association to many Skills on toSkills.ID = $self.ID;
+        toSkills    : Association to many Skills
+                          on toSkills.ID = $self.ID;
 }
 
 
@@ -53,11 +54,19 @@ entity PersonnelSkills {
             experienced    = 3;
             lowCompetence  = 2;
             learning       = 1;
+            noCompetence   = 0;
         };
 }
 
 type ResultRow {
-    EmployeeName: String;
-    TeamName: String;
-    skillName : array of String;
+    EmployeeName : String;
+    TeamName     : String;
+    SkillPairs   : array of SkillPair;
 }
+
+type SkillPair {
+    SkillName        : array of String;
+    ProficiencyLevel : Integer null;
+}
+
+

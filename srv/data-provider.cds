@@ -4,7 +4,8 @@ using {
     Skills          as DBSkills,
     Teams           as DBTeams,
     Fields          as DBFields,
-    ResultRow       as ResultRow
+    ResultRow       as TypeResultRow,
+    SkillPair       as TypeSkillPair
 } from '../db/data-models';
 
 
@@ -15,6 +16,5 @@ service SkillMatrix {
     entity Teams           as projection on DBTeams;
     entity Skills          as projection on DBSkills;
     entity Fields          as projection on DBFields;
-    function getSkillMatrix() returns array of String;
-
+    function getSkillMatrix() returns TypeResultRow;
 }

@@ -1,5 +1,5 @@
 import { ApplicationService, connect, Service, Request, TypedRequest, utils, run } from '@sap/cds';
-import {IFields, IPersonnelSkills, IPersonnels,ISkills,ITeams, IResultRow} from "./types/data.types"
+import { IFields, IPersonnelSkills, IPersonnels, ISkills, ITeams, IResultRow, ISkillPair } from "./types/data.types"
 export default class SkillMatrix extends ApplicationService {
     async init(): Promise<void> {
         const { Personnels, PersonnelSkills, Skills, Teams } = this.entities;
@@ -10,27 +10,33 @@ export default class SkillMatrix extends ApplicationService {
             const personnelSkills: IPersonnelSkills[] = await SELECT.from(PersonnelSkills).columns('personnel_ID', 'skill_ID', 'proficiencyLevel');
             const skills: ISkills[] = await SELECT.from(Skills).columns('ID', 'name');
             const teams: ITeams[] = await SELECT.from(Teams).columns('ID', 'name');
-    
-            // Pivot logic
+
             const result: IResultRow[] = [];
-    
+
             personnels.forEach(person => {
                 const team = teams.find(t => t.ID === person.teamID);
                 const employeeSkills = personnelSkills.filter(ps => ps.personnel_ID === person.ID);
-    
+
                 const row: IResultRow = {
-                    EmployeeName: `${person.firstName} ${person.lastName}`,
-                    TeamName: team ? team.name : 'No Team'
+                    employeeName: `${person.firstName} ${person.lastName}`,
+                    teamName: team ? team.name : 'No Team',
+                    skillPairs: []
                 };
-    
+
                 skills.forEach(skill => {
                     const personnelSkill = employeeSkills.find(ps => ps.skill_ID === skill.ID);
-                    row[skill.name] = personnelSkill ? personnelSkill.proficiencyLevel : null;
+                    let skillPair: ISkillPair = {
+                        skillName: skill.name,
+                        proficiencyLevel: personnelSkill ? personnelSkill.proficiencyLevel : 0
+                    }
+
+                    row.skillPairs.push(skillPair)
+
                 });
-    
+
                 result.push(row);
             });
-    
+
             return result;
         });
 

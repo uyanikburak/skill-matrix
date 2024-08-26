@@ -33,8 +33,13 @@ export interface IPersonnelSkills {
     skill_ID: string;
 }
 
+export interface ISkillPair {
+    skillName: string[];
+    proficiencyLevel: number;
+}
+
 export interface IResultRow {
-    EmployeeName: string;
-    TeamName: string;
-    [skillName: string]: number | string | null;
+    employeeName: string;
+    teamName: string;
+    skillPairs: ISkillPair[];
 }

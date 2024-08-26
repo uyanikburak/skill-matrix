@@ -28,14 +28,12 @@
             <VBox width="95%">
                 <smartFilterBar:SmartFilterBar
                     id="sfbOverview"
-                    entitySet="skillMatrix"
                     useProvidedNavigationProperties="true"
                     enableBasicSearch="true"
                     visible="false"
                 />
                 <smartTable:SmartTable
                     id="stOverview"
-                    entitySet="skillMatrix"
                     smartFilterId="sfbOverview"
                     tableType="ResponsiveTable"
                     enableAutoBinding="true"
@@ -45,11 +43,10 @@
                     showRowCount="true"
                     editTogglable="false"
                     visible="false"
-
+                    beforeRebindTable="onBeforeRebindTable"
                 >
                     <Table
                         id="tblOverview"
-                        sticky="ColumnHeaders,HeaderToolbar"
                     >
                     </Table>
                 </smartTable:SmartTable>
