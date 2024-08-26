@@ -1,0 +1,2 @@
+"use strict";sap.ui.define(["sap/ui/core/UIComponent","./model/models"],function(t,e){"use strict";const i=e["createDeviceModel"];const n=t.extend("skillmatrixui.Component",{metadata:{manifest:"json"},init:function e(){t.prototype.init.call(this);this.getRouter().initialize();this.setModel(i(),"device")}});return n});
+//# sourceMappingURL=Component.js.map
