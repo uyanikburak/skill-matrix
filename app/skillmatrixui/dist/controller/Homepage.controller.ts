@@ -10,6 +10,8 @@ import Table from "sap/m/Table";
 import ColumnListItem from "sap/m/ColumnListItem";
 import Column from "sap/m/Column";
 import Label from "sap/m/Label";
+import { foreach } from "@sap/cds";
+import Text from "sap/m/Text";
 /**
  * @namespace skillmatrixui.controller
  */
@@ -37,12 +39,14 @@ export default class Homepage extends Controller {
         });
 
         let columnNames: String[] = [];
-
-        Object.keys(skillMatrixData[0]).forEach(column => {
-            if (!columnNames.includes(column)) {
-                columnNames.push(column)
-            }
+        skillMatrixData.forEach(personnel => {
+            Object.keys(personnel).forEach(column => {
+                if (!columnNames.includes(column)) {
+                    columnNames.push(column)
+                }
+            })
         })
+
 
         for (let i = 0; i < columnNames.length; i++) {
             var oColumn = new Column("col" + i, {
@@ -50,55 +54,73 @@ export default class Homepage extends Controller {
                 header: new Label({
                     text: columnNames[i]
                 })
+            });
+            oTable.addColumn(oColumn);
+        }
+
+        let oCell = [];
+        for (let i = 0; i < columnNames.length; i++) {
+            var cell1 = new Text({
+                text: `{skillMatrix>/${columnNames[i]}}`
+            });
+            oCell.push(cell1);
+        }
+
+        let aColList = new ColumnListItem("aColList", {
+            cells: oCell
         });
-        oTable.addColumn(oColumn);
+
+        oTable.bindItems({
+            path: "skillMatrix>/",
+            template: aColList
+        })
+
     }
-}
 
     private _handleError(oError: Error): void {
-    // Handle the error case, for example, show a message
-    MessageToast.show("An error occurred while calling the function");
-}
+        // Handle the error case, for example, show a message
+        MessageToast.show("An error occurred while calling the function");
+    }
 
     public setSkillMatrixData(): ISkillMatrix[] | void {
-    const oModel = this.getView()?.getModel() as ODataModel
+        const oModel = this.getView()?.getModel() as ODataModel
         oModel.read("/SkillMatrix", {
-        success: (oData: { results: ISkillMatrix[] }) => {
-            this._handleSuccess(oData.results)
-        },
-        error: (err: Error) => {
-            this._handleError(err)
-            console.log(err)
-        }
-    })
-}
+            success: (oData: { results: ISkillMatrix[] }) => {
+                this._handleSuccess(oData.results)
+            },
+            error: (err: Error) => {
+                this._handleError(err)
+                console.log(err)
+            }
+        })
+    }
 
     public skillMatrixFormatter(skillMatrix: ISkillMatrix[]): ISkillMatrixCombined[] {
 
-    const combinedData: ISkillMatrixCombined[] = [];
+        const combinedData: ISkillMatrixCombined[] = [];
 
-    skillMatrix.forEach(item => {
-        // Check if the person already exists in the output array
-        let person = combinedData.find(p => p.ID === item.ID)!;
+        skillMatrix.forEach(item => {
+            // Check if the person already exists in the output array
+            let person = combinedData.find(p => p.ID === item.ID)!;
 
-        if (!person) {
-            // If not found, create a new person object
-            person = {
-                ID: item.ID,
-                fullName: item.fullName,
-                country: item.country,
-                hubName: item.hubName
-            };
-            combinedData.push(person);
-        }
+            if (!person) {
+                // If not found, create a new person object
+                person = {
+                    ID: item.ID,
+                    fullName: item.fullName,
+                    country: item.country,
+                    hubName: item.hubName
+                };
+                combinedData.push(person);
+            }
 
-        // Add the skill to the person object
-        person[item.skillName] = item.proficiencyLevel;
-    });
+            // Add the skill to the person object
+            person[(item.skillName).replace(/ /g, '')] = item.proficiencyLevel;
+        });
 
-    return combinedData;
+        return combinedData;
 
-}
+    }
 
 
 

@@ -1,6 +1,6 @@
 "use strict";
 
-sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/m/MessageToast", "sap/m/Column", "sap/m/Label"], function (Controller, JSONModel, MessageToast, Column, Label) {
+sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/m/MessageToast", "sap/m/ColumnListItem", "sap/m/Column", "sap/m/Label", "sap/m/Text"], function (Controller, JSONModel, MessageToast, ColumnListItem, Column, Label, Text) {
   "use strict";
 
   /**
@@ -23,10 +23,12 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap
         template: oTable.getBindingInfo("items")?.template
       });
       let columnNames = [];
-      Object.keys(skillMatrixData[0]).forEach(column => {
-        if (!columnNames.includes(column)) {
-          columnNames.push(column);
-        }
+      skillMatrixData.forEach(personnel => {
+        Object.keys(personnel).forEach(column => {
+          if (!columnNames.includes(column)) {
+            columnNames.push(column);
+          }
+        });
       });
       for (let i = 0; i < columnNames.length; i++) {
         var oColumn = new Column("col" + i, {
@@ -37,6 +39,20 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap
         });
         oTable.addColumn(oColumn);
       }
+      let oCell = [];
+      for (let i = 0; i < columnNames.length; i++) {
+        var cell1 = new Text({
+          text: `{skillMatrix>/${columnNames[i]}}`
+        });
+        oCell.push(cell1);
+      }
+      let aColList = new ColumnListItem("aColList", {
+        cells: oCell
+      });
+      oTable.bindItems({
+        path: "skillMatrix>/",
+        template: aColList
+      });
     },
     _handleError: function _handleError(oError) {
       // Handle the error case, for example, show a message
@@ -70,7 +86,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap
         }
 
         // Add the skill to the person object
-        person[item.skillName] = item.proficiencyLevel;
+        person[item.skillName.replace(/ /g, '')] = item.proficiencyLevel;
       });
       return combinedData;
     }
