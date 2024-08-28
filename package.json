@@ -11,7 +11,8 @@
     "start": "ui5 serve --port 8080 -o index.html",
     "watch-skillmatrixui": "cds-ts watch --profile hybrid --open skillmatrixui/webapp/index.html?sap-ui-xx-viewCache=false",
     "undeploy": "cf undeploy skill-matrix --delete-services --delete-service-keys --delete-service-brokers",
-    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "hd" : "cds deploy --to hana:skill-matrix-db-buya --auto-undeploy"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.6.5",

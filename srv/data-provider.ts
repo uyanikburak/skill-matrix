@@ -1,8 +1,8 @@
 import { ApplicationService, connect, Service, Request, TypedRequest, utils, run } from '@sap/cds';
-import { IFields, IPersonnelSkills, IPersonnels, ISkills, ITeams, IResultRow, ISkillPair } from "./types/data.types"
+import { IFields, IPersonnelSkills, IPersonnels, ISkills, ITeams, IResultRow, ISkillPair, ISkillMatrix } from "./types/data.types"
 export default class SkillMatrix extends ApplicationService {
     async init(): Promise<void> {
-        const { Personnels, PersonnelSkills, Skills, Teams } = this.entities;
+        const { Personnels, PersonnelSkills, Skills, Teams, SkillMatrix } = this.entities;
 
         this.on('getSkillMatrix', async (): Promise<IResultRow[]> => {
             // Fetch data from the relevant entities
@@ -19,19 +19,12 @@ export default class SkillMatrix extends ApplicationService {
 
                 const row: IResultRow = {
                     employeeName: `${person.firstName} ${person.lastName}`,
-                    teamName: team ? team.name : 'No Team',
-                    skillPairs: []
+                    teamName: team ? team.name : 'No Team'
                 };
 
                 skills.forEach(skill => {
                     const personnelSkill = employeeSkills.find(ps => ps.skill_ID === skill.ID);
-                    let skillPair: ISkillPair = {
-                        skillName: skill.name,
-                        proficiencyLevel: personnelSkill ? personnelSkill.proficiencyLevel : 0
-                    }
-
-                    row.skillPairs.push(skillPair)
-
+                    row[skill.name] = personnelSkill ? personnelSkill.proficiencyLevel : null;
                 });
 
                 result.push(row);

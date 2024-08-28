@@ -1,6 +1,6 @@
 "use strict";
 
-sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/m/MessageToast"], function (Controller, JSONModel, MessageToast) {
+sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/m/MessageToast", "sap/m/Column", "sap/m/Label"], function (Controller, JSONModel, MessageToast, Column, Label) {
   "use strict";
 
   /**
@@ -9,30 +9,70 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap
   const Homepage = Controller.extend("skillmatrixui.controller.Homepage", {
     /*eslint-disable @typescript-eslint/no-empty-function*/onInit: function _onInit() {},
     onBeforeRendering: function _onBeforeRendering() {
-      const oModel = this.getView()?.getModel();
-      const oParameters = {
-        success: oData => {
-          this._handleSuccess(oData);
-        },
-        error: oError => {
-          this._handleError(oError);
-        }
-      };
-      oModel.callFunction("/getSkillMatrix", oParameters);
+      this.setSkillMatrixData();
     },
     _handleSuccess: function _handleSuccess(oData) {
       // Handle the success case, for example, set data to a model
-      const oModel = new JSONModel(oData);
-      this.getView()?.setModel(oModel, "skillMatrix");
+      const skillMatrixData = this.skillMatrixFormatter(oData);
+      const skillMatrixJSON = new JSONModel(skillMatrixData);
+      this.getView()?.setModel(skillMatrixJSON, "skillMatrix");
+      let oTable = this.byId("skillMatrixTable");
+      oTable.setModel(skillMatrixJSON, "skillMatrix");
+      oTable.bindItems({
+        path: "skillMatrix>/",
+        template: oTable.getBindingInfo("items")?.template
+      });
+      let columnNames = [];
+      Object.keys(skillMatrixData[0]).forEach(column => {
+        if (!columnNames.includes(column)) {
+          columnNames.push(column);
+        }
+      });
+      for (let i = 0; i < columnNames.length; i++) {
+        var oColumn = new Column("col" + i, {
+          width: "1em",
+          header: new Label({
+            text: columnNames[i]
+          })
+        });
+        oTable.addColumn(oColumn);
+      }
     },
     _handleError: function _handleError(oError) {
       // Handle the error case, for example, show a message
       MessageToast.show("An error occurred while calling the function");
     },
-    onBeforeRebindTable: function _onBeforeRebindTable(event) {
-      const bindingParams = event.getParameter("bindingParams");
-      const skillMatrixModel = this.getView()?.getModel("skillMatrix");
-      event.getSource().getTable().setModel(skillMatrixModel);
+    setSkillMatrixData: function _setSkillMatrixData() {
+      const oModel = this.getView()?.getModel();
+      oModel.read("/SkillMatrix", {
+        success: oData => {
+          this._handleSuccess(oData.results);
+        },
+        error: err => {
+          this._handleError(err);
+        }
+      });
+    },
+    skillMatrixFormatter: function _skillMatrixFormatter(skillMatrix) {
+      const combinedData = [];
+      skillMatrix.forEach(item => {
+        // Check if the person already exists in the output array
+        let person = combinedData.find(p => p.ID === item.ID);
+        if (!person) {
+          // If not found, create a new person object
+          person = {
+            ID: item.ID,
+            fullName: item.fullName,
+            country: item.country,
+            hubName: item.hubName
+          };
+          combinedData.push(person);
+        }
+
+        // Add the skill to the person object
+        person[item.skillName] = item.proficiencyLevel;
+      });
+      return combinedData;
     }
   });
   return Homepage;

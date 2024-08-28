@@ -23,12 +23,12 @@ export interface ISkills {
 export interface IFields {
     ID: string;
     name: string;
-    description:string;
+    description: string;
 }
 
 
 export interface IPersonnelSkills {
-    proficiencyLevel: number; 
+    proficiencyLevel: number;
     personnel_ID: string;
     skill_ID: string;
 }
@@ -41,5 +41,18 @@ export interface ISkillPair {
 export interface IResultRow {
     employeeName: string;
     teamName: string;
-    skillPairs: ISkillPair[];
+    [skillName: string]: number | string | null;
 }
+
+
+export interface ISkillMatrix {
+    ID: string;
+    fullName: string;
+    country: string;
+    hubName: string;
+    skillName: string;
+    skillsHubName: string;
+    proficiencyLevel: number;
+}
+
+

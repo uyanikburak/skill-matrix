@@ -1,5 +1,9 @@
 VIEW SkillMatrix_SkillMatrix AS SELECT
-  personnel_3.firstName,
-  skill_4.name AS skillName,
-  perskills_2.proficiencyLevel
-FROM ((((Personnels AS personnels_0 INNER JOIN Teams AS teams_1 ON teams_1.ID = personnels_0.teamID) INNER JOIN PersonnelSkills AS perskills_2 ON perskills_2.personnel_ID = perskills_2.personnel_ID) LEFT JOIN Personnels AS personnel_3 ON perskills_2.personnel_ID = personnel_3.ID) LEFT JOIN Skills AS skill_4 ON perskills_2.skill_ID = skill_4.ID)
+  DBPersonnels_0.ID,
+  DBPersonnels_0.fullName,
+  DBPersonnels_0.country,
+  toHub_1.name AS hubName,
+  skill_3.name AS skillName,
+  toHubs_4.name AS skillsHubName,
+  toSkills_2.proficiencyLevel
+FROM ((((Personnels AS DBPersonnels_0 LEFT JOIN Hubs AS toHub_1 ON toHub_1.ID = DBPersonnels_0.hubID) LEFT JOIN PersonnelSkills AS toSkills_2 ON (toSkills_2.personnel_ID = DBPersonnels_0.ID)) LEFT JOIN Skills AS skill_3 ON toSkills_2.skill_ID = skill_3.ID) LEFT JOIN Hubs AS toHubs_4 ON toHubs_4.ID = skill_3.hubID)

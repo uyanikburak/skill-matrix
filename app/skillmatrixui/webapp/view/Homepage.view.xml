@@ -1,5 +1,4 @@
-<mvc:View
-    controllerName="skillmatrixui.controller.Homepage"
+<mvc:View controllerName="skillmatrixui.controller.Homepage"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true"
     xmlns:core="sap.ui.core"
@@ -8,59 +7,51 @@
     xmlns:table="sap.ui.table"
     xmlns:micro="sap.suite.ui.microchart"
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
-    xmlns:smartTable="sap.ui.comp.smarttable"
->
-    <Page
-        id="Homepage"
-        showHeader="false"
-    >
-        <f:ShellBar
-            title="{i18n>title}"
-            secondTitle="{i18n>homepage}"
-        >
+    xmlns:smartTable="sap.ui.comp.smarttable">
+    <Page id="Homepage"
+        showHeader="false">
+        <f:ShellBar title="{i18n>title}"
+            secondTitle="{i18n>homepage}">
             <f:menu>
             </f:menu>
         </f:ShellBar>
-        <FlexBox
-            justifyContent="Center"
-            alignItems="Center"
-        >
-            <VBox width="95%">
-                <smartFilterBar:SmartFilterBar
-                    id="sfbOverview"
-                    useProvidedNavigationProperties="true"
-                    enableBasicSearch="true"
-                    visible="false"
-                />
-                <smartTable:SmartTable
-                    id="stOverview"
-                    smartFilterId="sfbOverview"
-                    tableType="ResponsiveTable"
-                    enableAutoBinding="true"
-                    enableExport="true"
-                    showFullScreenButton="true"
-                    header="{i18n>overview}"
-                    showRowCount="true"
-                    editTogglable="false"
-                    visible="false"
-                    beforeRebindTable="onBeforeRebindTable"
-                >
-                    <Table
-                        id="tblOverview"
-                    >
-                    </Table>
-                </smartTable:SmartTable>
-            </VBox>
-        </FlexBox>
+        <Table id="skillMatrixTable"
+            items="{path: 'skillMatrix>/', templateShareable:true}"
+             >
+            <columns>
+                <!-- <Column>
+                    <Text text="Name" />
+                </Column>
+                <Column>
+                    <Text text="Country" />
+                </Column>
+                <Column>
+                    <Text text="Hub" />
+                </Column> -->
+                <!-- Dynamically create skill columns here -->
+                <!-- <Column>
+                    <Text text="{skillName}" />
+                </Column> -->
+            </columns>
+            <items>
+                <ColumnListItem>
+                    <cells>
+                        <!-- <Text text="{skillMatrix>fullName}" />
+                        <Text text="{skillMatrix>country}" />
+                        <Text text="{skillMatrix>hubName}" /> -->
+                        <!-- Dynamically bind skill levels here -->
+                        <!-- <ProgressIndicator percentValue="{proficiencyLevel}" /> -->
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
         <footer>
             <OverflowToolbar id="otbFooter">
-                <Button
-                    id="btnMessages"
+                <Button id="btnMessages"
                     icon="sap-icon://alert"
                     text="{=${message>/}.length}"
                     type="Emphasized"
-                    press="onMessagePopoverPress"
-                />
+                    press="onMessagePopoverPress" />
             </OverflowToolbar>
         </footer>
     </Page>

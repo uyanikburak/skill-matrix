@@ -1,7 +1,0 @@
-{
-    "auth": {
-        "passport": {
-            "strategy": "JWT"
-        }
-    }
-}

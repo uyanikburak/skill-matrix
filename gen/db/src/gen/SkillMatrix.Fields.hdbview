@@ -1,8 +1,0 @@
-VIEW SkillMatrix_Fields AS SELECT
-  DBFields_0.ID,
-  DBFields_0.name,
-  DBFields_0.description
-FROM Fields AS DBFields_0
-WITH ASSOCIATIONS (
-  MANY TO MANY JOIN SkillMatrix_Skills AS toSkills ON (toSkills.ID = ID)
-)

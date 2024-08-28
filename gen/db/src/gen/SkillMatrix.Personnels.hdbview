@@ -2,11 +2,15 @@ VIEW SkillMatrix_Personnels AS SELECT
   DBPersonnels_0.ID,
   DBPersonnels_0.firstName,
   DBPersonnels_0.lastName,
+  DBPersonnels_0.country,
   DBPersonnels_0.email,
   DBPersonnels_0.userRole,
-  DBPersonnels_0.teamID
+  DBPersonnels_0.teamID,
+  DBPersonnels_0.hubID,
+  DBPersonnels_0.fullName
 FROM Personnels AS DBPersonnels_0
 WITH ASSOCIATIONS (
   MANY TO ONE JOIN SkillMatrix_Teams AS toTeam ON (toTeam.ID = teamID),
+  MANY TO ONE JOIN SkillMatrix_Hubs AS toHub ON (toHub.ID = hubID),
   MANY TO MANY JOIN SkillMatrix_PersonnelSkills AS toSkills ON (toSkills.personnel_ID = ID)
 )

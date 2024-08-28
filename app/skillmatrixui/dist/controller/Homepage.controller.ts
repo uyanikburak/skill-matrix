@@ -5,8 +5,11 @@ import MessageToast from "sap/m/MessageToast";
 import { IBindingParams, ISubmitChangeResponse, Routes } from "../types/global.types";
 import SmartTable, { SmartTable$BeforeRebindTableEvent, SmartTable$InitialiseEvent } from "sap/ui/comp/smarttable/SmartTable";
 import { EntitySet } from "sap/ui/model/analytics/odata4analytics";
-
-
+import { ISkillMatrix, ISkillMatrixCombined } from "../types/global.types"
+import Table from "sap/m/Table";
+import ColumnListItem from "sap/m/ColumnListItem";
+import Column from "sap/m/Column";
+import Label from "sap/m/Label";
 /**
  * @namespace skillmatrixui.controller
  */
@@ -18,37 +21,85 @@ export default class Homepage extends Controller {
     }
 
     public onBeforeRendering(): void | undefined {
-        const oModel = this.getView()?.getModel() as ODataModel
-
-        const oParameters = {
-            success: (oData: any) => {
-                console.log("Function call was successful:", oData);
-                this._handleSuccess(oData);
-            },
-            error: (oError: any) => {
-                console.error("Function call failed:", oError);
-                this._handleError(oError);
-            }
-        };
-        oModel.callFunction("/getSkillMatrix", oParameters);
+        this.setSkillMatrixData()
     }
 
-    private _handleSuccess(oData: any): void {
+    private _handleSuccess(oData: ISkillMatrix[]): void {
         // Handle the success case, for example, set data to a model
-        const oModel = new JSONModel(oData);
-        this.getView()?.setModel(oModel, "skillMatrix");
-    }
+        const skillMatrixData = this.skillMatrixFormatter(oData) as ISkillMatrixCombined[]
+        const skillMatrixJSON = new JSONModel(skillMatrixData);
+        this.getView()?.setModel(skillMatrixJSON, "skillMatrix");
+        let oTable = this.byId("skillMatrixTable") as Table;
+        oTable.setModel(skillMatrixJSON, "skillMatrix");
+        oTable.bindItems({
+            path: "skillMatrix>/",
+            template: oTable.getBindingInfo("items")?.template as ColumnListItem
+        });
 
-    private _handleError(oError: any): void {
-        // Handle the error case, for example, show a message
-        MessageToast.show("An error occurred while calling the function");
-    }
+        let columnNames: String[] = [];
 
-    public onBeforeRebindTable(event: SmartTable$BeforeRebindTableEvent){
-        const bindingParams = event.getParameter("bindingParams") as IBindingParams;
-        const skillMatrixModel = this.getView()?.getModel("skillMatrix") as JSONModel;
-        event.getSource().getTable().setModel(skillMatrixModel)
+        Object.keys(skillMatrixData[0]).forEach(column => {
+            if (!columnNames.includes(column)) {
+                columnNames.push(column)
+            }
+        })
+
+        for (let i = 0; i < columnNames.length; i++) {
+            var oColumn = new Column("col" + i, {
+                width: "1em",
+                header: new Label({
+                    text: columnNames[i]
+                })
+        });
+        oTable.addColumn(oColumn);
     }
+}
+
+    private _handleError(oError: Error): void {
+    // Handle the error case, for example, show a message
+    MessageToast.show("An error occurred while calling the function");
+}
+
+    public setSkillMatrixData(): ISkillMatrix[] | void {
+    const oModel = this.getView()?.getModel() as ODataModel
+        oModel.read("/SkillMatrix", {
+        success: (oData: { results: ISkillMatrix[] }) => {
+            this._handleSuccess(oData.results)
+        },
+        error: (err: Error) => {
+            this._handleError(err)
+            console.log(err)
+        }
+    })
+}
+
+    public skillMatrixFormatter(skillMatrix: ISkillMatrix[]): ISkillMatrixCombined[] {
+
+    const combinedData: ISkillMatrixCombined[] = [];
+
+    skillMatrix.forEach(item => {
+        // Check if the person already exists in the output array
+        let person = combinedData.find(p => p.ID === item.ID)!;
+
+        if (!person) {
+            // If not found, create a new person object
+            person = {
+                ID: item.ID,
+                fullName: item.fullName,
+                country: item.country,
+                hubName: item.hubName
+            };
+            combinedData.push(person);
+        }
+
+        // Add the skill to the person object
+        person[item.skillName] = item.proficiencyLevel;
+    });
+
+    return combinedData;
+
+}
+
 
 
 }

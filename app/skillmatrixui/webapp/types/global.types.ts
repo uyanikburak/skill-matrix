@@ -144,3 +144,23 @@ export interface ISubmitResponse {
     statusText?: string;
     headers?: object;
 }
+
+export interface ISkillMatrix {
+    ID:string;
+    fullName:string;
+    country:string;
+    hubName:string;
+    skillName:string;
+    skillsHubName:string;
+    proficiencyLevel:number;
+}
+
+export interface ISkillMatrixCombined {
+    ID:string;
+    fullName:string;
+    country:string;
+    hubName:string;
+    [skillName: string]: number | string | null;
+}
+
+

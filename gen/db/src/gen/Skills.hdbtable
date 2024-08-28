@@ -2,10 +2,10 @@ COLUMN TABLE Skills (
   ID NVARCHAR(36) NOT NULL,
   name NVARCHAR(100),
   description NVARCHAR(500),
-  fieldID NVARCHAR(36),
+  hubID NVARCHAR(36),
   PRIMARY KEY(ID)
 ) WITH ASSOCIATIONS (
-  MANY TO ONE JOIN Fields AS toField ON (toField.ID = fieldID),
+  MANY TO ONE JOIN Hubs AS toHubs ON (toHubs.ID = hubID),
   MANY TO ONE JOIN Teams AS toTeams ON (toTeams.ID = ID),
   MANY TO MANY JOIN PersonnelSkills AS toPersonnels ON (toPersonnels.skill_ID = ID)
 )

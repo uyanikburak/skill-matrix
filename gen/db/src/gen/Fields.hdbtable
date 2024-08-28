@@ -1,8 +1,0 @@
-COLUMN TABLE Fields (
-  ID NVARCHAR(36) NOT NULL,
-  name NVARCHAR(100),
-  description NVARCHAR(500),
-  PRIMARY KEY(ID)
-) WITH ASSOCIATIONS (
-  MANY TO MANY JOIN Skills AS toSkills ON (toSkills.ID = ID)
-)

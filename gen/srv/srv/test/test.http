@@ -1,2 +1,0 @@
-POST  http://localhost:4004/odata/v2/skill-matrix/getSkillMatrix
-Content-Type: application/json
