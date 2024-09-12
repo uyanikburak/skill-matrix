@@ -1,12 +1,16 @@
 "use strict";
 
-sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap/m/MessageToast", "sap/m/ColumnListItem", "sap/m/Column", "sap/m/Label", "sap/m/Text"], function (Controller, JSONModel, MessageToast, ColumnListItem, Column, Label, Text) {
+sap.ui.define(["sap/ui/model/json/JSONModel", "sap/m/MessageToast", "sap/m/Table", "sap/m/ColumnListItem", "sap/m/Column", "sap/m/Label", "sap/m/Text", "./BaseController"], function (JSONModel, MessageToast, sap_m_Table, ColumnListItem, Column, Label, Text, __BaseController) {
   "use strict";
 
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule && typeof obj.default !== "undefined" ? obj.default : obj;
+  }
+  const BaseController = _interopRequireDefault(__BaseController);
   /**
    * @namespace skillmatrixui.controller
    */
-  const Homepage = Controller.extend("skillmatrixui.controller.Homepage", {
+  const Homepage = BaseController.extend("skillmatrixui.controller.Homepage", {
     /*eslint-disable @typescript-eslint/no-empty-function*/onInit: function _onInit() {},
     onBeforeRendering: function _onBeforeRendering() {
       this.setSkillMatrixData();
@@ -17,11 +21,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap
       const skillMatrixJSON = new JSONModel(skillMatrixData);
       this.getView()?.setModel(skillMatrixJSON, "skillMatrix");
       let oTable = this.byId("skillMatrixTable");
-      oTable.setModel(skillMatrixJSON, "skillMatrix");
-      oTable.bindItems({
-        path: "skillMatrix>/",
-        template: oTable.getBindingInfo("items")?.template
-      });
+
+      // Collect column names
       let columnNames = [];
       skillMatrixData.forEach(personnel => {
         Object.keys(personnel).forEach(column => {
@@ -30,6 +31,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap
           }
         });
       });
+
+      // Create columns dynamically
       for (let i = 0; i < columnNames.length; i++) {
         var oColumn = new Column("col" + i, {
           width: "1em",
@@ -39,16 +42,27 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap
         });
         oTable.addColumn(oColumn);
       }
+
+      // Create cells for each column
       let oCell = [];
       for (let i = 0; i < columnNames.length; i++) {
         var cell1 = new Text({
-          text: `{skillMatrix>/${columnNames[i]}}`
+          text: `{skillMatrix>${columnNames[i]}}`,
+          class: {
+            path: `skillMatrix>${columnNames[i]}`,
+            formatter: this.cellColorFormatter
+          }
         });
         oCell.push(cell1);
       }
-      let aColList = new ColumnListItem("aColList", {
-        cells: oCell
+
+      // Create the ColumnListItem template
+      let aColList = new ColumnListItem({
+        cells: oCell,
+        type: "Active"
       });
+
+      // Bind items once, after creating the columns
       oTable.bindItems({
         path: "skillMatrix>/",
         template: aColList
@@ -89,6 +103,15 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "sap/ui/model/json/JSONModel", "sap
         person[item.skillName.replace(/ /g, '')] = item.proficiencyLevel;
       });
       return combinedData;
+    },
+    onItemPress: function _onItemPress(event) {
+      let table = event.getSource();
+      let context = event.getParameter("listItem")?.getBindingContext("skillMatrix");
+      let personnelID = context?.getProperty("ID");
+      let router = this.getRouter();
+      router.navTo("RoutePersonnelDetail", {
+        personnelID: personnelID
+      });
     }
   });
   return Homepage;

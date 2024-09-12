@@ -47,4 +47,5 @@ export default class BaseController extends Controller {
     public getCurrentView(): View {
         return this.getView() as View;
     }
+
 } 

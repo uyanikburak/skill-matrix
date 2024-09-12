@@ -1,5 +1,5 @@
 COLUMN TABLE PersonnelSkills (
-  personnel_ID NVARCHAR(36) NOT NULL,
+  personnel_ID NVARCHAR(5000) NOT NULL,
   skill_ID NVARCHAR(36) NOT NULL,
   proficiencyLevel INTEGER,
   PRIMARY KEY(personnel_ID, skill_ID)

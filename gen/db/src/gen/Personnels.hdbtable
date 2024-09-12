@@ -1,5 +1,5 @@
 COLUMN TABLE Personnels (
-  ID NVARCHAR(36) NOT NULL,
+  ID NVARCHAR(5000) NOT NULL,
   firstName NVARCHAR(50),
   lastName NVARCHAR(50),
   country NVARCHAR(2),

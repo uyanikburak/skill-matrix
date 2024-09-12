@@ -10,13 +10,9 @@
     xmlns:smartTable="sap.ui.comp.smarttable">
     <Page id="Homepage"
         showHeader="false">
-        <f:ShellBar title="{i18n>title}"
-            secondTitle="{i18n>homepage}">
-            <f:menu>
-            </f:menu>
-        </f:ShellBar>
         <Table id="skillMatrixTable"
             items="{path: 'skillMatrix>/', templateShareable:true}"
+            itemPress=".onItemPress"
              >
             <columns>
                 <!-- <Column>
@@ -34,7 +30,7 @@
                 </Column> -->
             </columns>
             <items>
-                <ColumnListItem>
+                <ColumnListItem type="Active" vAlign="Middle" >
                     <cells>
                         <!-- <Text text="{skillMatrix>fullName}" />
                         <Text text="{skillMatrix>country}" />

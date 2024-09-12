@@ -5,17 +5,22 @@ import MessageToast from "sap/m/MessageToast";
 import { IBindingParams, ISubmitChangeResponse, Routes } from "../types/global.types";
 import SmartTable, { SmartTable$BeforeRebindTableEvent, SmartTable$InitialiseEvent } from "sap/ui/comp/smarttable/SmartTable";
 import { EntitySet } from "sap/ui/model/analytics/odata4analytics";
+import {  } from "sap/m/Table";
+import oControlEvent  from "sap/ui/core/Control";
 import { ISkillMatrix, ISkillMatrixCombined } from "../types/global.types"
 import Table from "sap/m/Table";
+import { ListBase$ItemPressEvent } from  "sap/m/ListBase";
 import ColumnListItem from "sap/m/ColumnListItem";
 import Column from "sap/m/Column";
 import Label from "sap/m/Label";
 import { foreach } from "@sap/cds";
 import Text from "sap/m/Text";
+import * as path from "path";
+import BaseController from "./BaseController";
 /**
  * @namespace skillmatrixui.controller
  */
-export default class Homepage extends Controller {
+export default class Homepage extends BaseController {
 
     /*eslint-disable @typescript-eslint/no-empty-function*/
     public onInit(): void {
@@ -28,26 +33,23 @@ export default class Homepage extends Controller {
 
     private _handleSuccess(oData: ISkillMatrix[]): void {
         // Handle the success case, for example, set data to a model
-        const skillMatrixData = this.skillMatrixFormatter(oData) as ISkillMatrixCombined[]
+        const skillMatrixData = this.skillMatrixFormatter(oData) as ISkillMatrixCombined[];
         const skillMatrixJSON = new JSONModel(skillMatrixData);
         this.getView()?.setModel(skillMatrixJSON, "skillMatrix");
-        let oTable = this.byId("skillMatrixTable") as Table;
-        oTable.setModel(skillMatrixJSON, "skillMatrix");
-        oTable.bindItems({
-            path: "skillMatrix>/",
-            template: oTable.getBindingInfo("items")?.template as ColumnListItem
-        });
 
+        let oTable = this.byId("skillMatrixTable") as Table;
+
+        // Collect column names
         let columnNames: String[] = [];
         skillMatrixData.forEach(personnel => {
             Object.keys(personnel).forEach(column => {
                 if (!columnNames.includes(column)) {
-                    columnNames.push(column)
+                    columnNames.push(column);
                 }
-            })
-        })
+            });
+        });
 
-
+        // Create columns dynamically
         for (let i = 0; i < columnNames.length; i++) {
             var oColumn = new Column("col" + i, {
                 width: "1em",
@@ -58,24 +60,32 @@ export default class Homepage extends Controller {
             oTable.addColumn(oColumn);
         }
 
+        // Create cells for each column
         let oCell = [];
         for (let i = 0; i < columnNames.length; i++) {
             var cell1 = new Text({
-                text: `{skillMatrix>/${columnNames[i]}}`
+                text: `{skillMatrix>${columnNames[i]}}`,
+                class: {
+                    path: `skillMatrix>${columnNames[i]}`,
+                    formatter: this.cellColorFormatter
+                }
             });
             oCell.push(cell1);
         }
 
-        let aColList = new ColumnListItem("aColList", {
-            cells: oCell
+        // Create the ColumnListItem template
+        let aColList = new ColumnListItem({
+            cells: oCell,
+            type:"Active"
         });
 
+        // Bind items once, after creating the columns
         oTable.bindItems({
             path: "skillMatrix>/",
             template: aColList
-        })
-
+        });
     }
+
 
     private _handleError(oError: Error): void {
         // Handle the error case, for example, show a message
@@ -122,6 +132,13 @@ export default class Homepage extends Controller {
 
     }
 
+    public onItemPress(event:ListBase$ItemPressEvent):void{
+        let table = event.getSource();
+        let context = event.getParameter("listItem")?.getBindingContext("skillMatrix");
+        let personnelID = context?.getProperty("ID");
 
+        let router = this.getRouter();
+        router.navTo("RoutePersonnelDetail",{personnelID:personnelID})
+    }
 
 }

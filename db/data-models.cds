@@ -17,7 +17,7 @@ entity Hubs {
 
 
 entity Personnels {
-    key ID        : UUID;
+    key ID        : String;
         firstName : String(50);
         lastName  : String(50);
         country   : Countries:code;

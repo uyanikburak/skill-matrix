@@ -1,0 +1,14 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <MenuItem id="mnitHomepage"
+        visible="false"
+        text="{i18n>homepage}"
+        icon="sap-icon://home"
+        press="onNavToView('RouteHomepage')" />
+    <MenuItem id="mnitAdmin"
+        visible="false"
+        text="{i18n>administration}"
+        icon="sap-icon://key-user-settings"
+        press="onNavToView('RouteAdmin')" />
+
+</core:FragmentDefinition>

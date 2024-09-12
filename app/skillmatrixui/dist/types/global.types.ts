@@ -163,4 +163,13 @@ export interface ISkillMatrixCombined {
     [skillName: string]: number | string | null;
 }
 
+export interface IPersonnels {
+    ID: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    userRole: string;
+    teamID: string;
+}
+
 

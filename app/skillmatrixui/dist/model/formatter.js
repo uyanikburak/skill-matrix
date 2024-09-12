@@ -1,0 +1,2 @@
+"use strict";sap.ui.define([],function(){"use strict";var t={getStatusForValue:function(t){if(!t)return{state:"None",text:""};if(t<=2)return{state:"Error",text:t.toString()};if(t===3)return{state:"Warning",text:t.toString()};if(t>=4)return{state:"Success",text:t.toString()};return{state:"None",text:t.toString()}}};return t});
+//# sourceMappingURL=formatter.js.map

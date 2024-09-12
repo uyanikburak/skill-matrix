@@ -23,6 +23,14 @@
           "annotations": [],
           "odataVersion": "2.0"
         }
+      },
+      "globalModelSource": {
+        "uri": "./model/globalModel.json",
+        "type": "JSON"
+      },
+      "routeMappingsSource": {
+        "uri": "./model/routeMappings.json",
+        "type": "JSON"
       }
     }
   },
@@ -44,6 +52,9 @@
   },
   "sap.ui5": {
     "flexEnabled": false,
+    "resourceRoots": {
+      "ui5.antares": "./resources/ui5/antares"
+    },
     "dependencies": {
       "minUI5Version": "1.127.1",
       "libs": {
@@ -54,7 +65,8 @@
         "sap.ui.comp": {},
         "sap.ui.generic.app": {},
         "sap.ui.table": {},
-        "sap.ushell": {}
+        "sap.ushell": {},
+        "ui5.antares": {}
       }
     },
     "contentDensities": {
@@ -75,6 +87,14 @@
           "operationMode": "Server",
           "autoExpandSelect": true,
           "earlyRequests": true
+        }
+      },
+      "routeMappingsModel": {
+        "dataSource": "routeMappingsSource",
+        "preload": true,
+        "type": "sap.ui.model.json.JSONModel",
+        "settings": {
+          "defaultBindingMode": "TwoWay"
         }
       }
     },
@@ -102,6 +122,20 @@
           "target": [
             "TargetHomepage"
           ]
+        },
+        {
+          "pattern": "personnel-detail/{personnelID}",
+          "name": "RoutePersonnelDetail",
+          "target": [
+            "TargetPersonnelDetail"
+          ]
+        },
+        {
+          "pattern": "administration",
+          "name": "RouteAdministration",
+          "target": [
+            "TargetAdministration"
+          ]
         }
       ],
       "targets": {
@@ -111,7 +145,23 @@
           "clearControlAggregation": false,
           "viewId": "Homepage",
           "viewName": "Homepage"
+        },
+        "TargetPersonnelDetail": {
+          "viewType": "XML",
+          "transition": "slide",
+          "viewId": "PersonnelDetail",
+          "viewName": "PersonnelDetail"
+        },
+        "TargetAdministration": {
+          "viewType": "XML",
+          "transition": "slide",
+          "viewId": "Administration",
+          "viewName": "Administration"
         }
+      },
+      "detail": {
+        "id": "detail",
+        "name": "Detail"
       }
     },
     "rootView": {

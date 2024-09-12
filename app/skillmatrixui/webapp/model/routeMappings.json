@@ -1,0 +1,14 @@
+[
+    {
+        "route": "RouteHomepage",
+        "pageLabelKey": "homepage"
+    },
+    {
+        "route": "RouteAdministration",
+        "pageLabelKey": "administration"
+    },
+    {
+        "route": "RoutePersonnelDetail",
+        "pageLabelKey": "personnelDetail"
+    }
+]
