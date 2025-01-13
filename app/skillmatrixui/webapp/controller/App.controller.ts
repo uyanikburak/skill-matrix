@@ -8,6 +8,8 @@ import { DefaultMessages } from "skillmatrixui/types/global.types";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 import View from "sap/ui/core/mvc/View";
 import ShellBar from "sap/f/ShellBar";
+import { FlexibleColumnLayout$StateChangeEvent } from "sap/f/FlexibleColumnLayout";
+
 /**
  * @namespace skillmatrixui.controller
  */
@@ -15,6 +17,8 @@ export default class App extends Controller {
 
     private router: Router;
     private currentRoute: string;
+    private currentPersonnelID: string;
+
 
     /*eslint-disable @typescript-eslint/no-empty-function*/
     public onInit(): void {
@@ -24,6 +28,22 @@ export default class App extends Controller {
 
     private getUIComponent(): UIComponent {
         return this.getOwnerComponent() as UIComponent;
+    }
+
+    public onNavToView(target: string): void {
+        this.router.navTo(target);
+    }
+
+    public onFclStateChanged(event: FlexibleColumnLayout$StateChangeEvent) {
+        const isNavigationArrow = event.getParameter("isNavigationArrow");
+        const layout = event.getParameter("layout");
+
+        this.updateButtonVisibilities();
+
+        // Replace the URL with the new layout if a navigation arrow was used
+        if (isNavigationArrow) {
+            this.router.navTo(this.currentRoute, { layout: layout, personnelID: this.currentPersonnelID }, true);
+        }
     }
 
     private onRouteMatched(event: Router$RouteMatchedEvent) {
@@ -44,6 +64,7 @@ export default class App extends Controller {
         }
         this.changePageLabel(event);
         this.currentRoute = routeName;
+        this.currentPersonnelID =  routingArgs.personnelID || "";
     }
 
     private changePageLabel(event: Router$RouteMatchedEvent) {
@@ -61,5 +82,10 @@ export default class App extends Controller {
 
     private getResourceBundle(): ResourceBundle {
         return ((this.getUIComponent().getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle);
+    }
+    private updateButtonVisibilities() {
+        const fclModel = this.getUIComponent().getModel("fclModel") as JSONModel;
+        const uiState = this.getUIComponent().getFclSemanticHelper().getCurrentUIState();
+        fclModel.setData(uiState);
     }
 }

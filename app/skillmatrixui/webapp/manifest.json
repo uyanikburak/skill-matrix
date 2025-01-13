@@ -109,11 +109,13 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
+        "type": "View",
         "async": true,
         "viewPath": "skillmatrixui.view",
-        "controlAggregation": "pages",
-        "controlId": "app",
-        "clearControlAggregation": false
+        "transition": "slide",
+        "controlId": "fcl",
+        "clearTarget" : "true",
+        "clearControlAggregation": true
       },
       "routes": [
         {
@@ -142,19 +144,21 @@
         "TargetHomepage": {
           "viewType": "XML",
           "transition": "slide",
-          "clearControlAggregation": false,
+          "controlAggregation": "beginColumnPages",
           "viewId": "Homepage",
           "viewName": "Homepage"
         },
         "TargetPersonnelDetail": {
           "viewType": "XML",
           "transition": "slide",
+          "controlAggregation": "beginColumnPages",
           "viewId": "PersonnelDetail",
           "viewName": "PersonnelDetail"
         },
         "TargetAdministration": {
           "viewType": "XML",
           "transition": "slide",
+          "controlAggregation": "beginColumnPages",
           "viewId": "Administration",
           "viewName": "Administration"
         }

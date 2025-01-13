@@ -14,19 +14,8 @@ sap.ui.define([], function () {
   }(ApplicationModels || {});
   var Routes = /*#__PURE__*/function (Routes) {
     Routes["HOMEPAGE"] = "RouteHomepage";
-    Routes["PERSONNELS"] = "RoutePersonnels";
-    Routes["ENGAGEMENTS"] = "RouteEngagements";
-    Routes["TEAMS"] = "RouteTeams";
-    Routes["FORECAST"] = "RouteForecast";
-    Routes["ANALYTICS"] = "RouteAnalytics";
-    Routes["UTILIZATION"] = "RouteUtilization";
-    Routes["REVENUE"] = "RouteRevenue";
-    Routes["GENERATOR"] = "RouteGenerator";
-    Routes["CHECK"] = "RouteTimesheetCheck";
-    Routes["LOGS"] = "RouteAppLogs";
-    Routes["MAPPINGS"] = "RouteMappings";
-    Routes["VISIBILITY"] = "RouteVisibility";
-    Routes["CONFIGURATIONS"] = "RouteConfigurations";
+    Routes["PERSONNELDETAILS"] = "RoutePersonnels";
+    Routes["ADMINISTRATION"] = "RouteAdministration";
     return Routes;
   }(Routes || {});
   var FioriThemes = /*#__PURE__*/function (FioriThemes) {

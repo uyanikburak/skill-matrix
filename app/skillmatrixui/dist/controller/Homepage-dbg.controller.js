@@ -1,19 +1,41 @@
 "use strict";
 
-sap.ui.define(["sap/ui/model/json/JSONModel", "sap/m/MessageToast", "sap/m/Table", "sap/m/ColumnListItem", "sap/m/Column", "sap/m/Label", "sap/m/Text", "./BaseController"], function (JSONModel, MessageToast, sap_m_Table, ColumnListItem, Column, Label, Text, __BaseController) {
+sap.ui.define(["sap/ui/model/json/JSONModel", "sap/m/MessageToast", "../types/global.types", "sap/m/Table", "sap/m/ColumnListItem", "sap/m/Column", "sap/m/Label", "sap/m/Text", "./BaseController", "skillmatrixui/util/common/PageCL", "skillmatrixui/model/formatter"], function (JSONModel, MessageToast, ___types_globaltypes, sap_m_Table, ColumnListItem, Column, Label, Text, __BaseController, __PageCL, __formatter) {
   "use strict";
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule && typeof obj.default !== "undefined" ? obj.default : obj;
   }
+  const Routes = ___types_globaltypes["Routes"];
   const BaseController = _interopRequireDefault(__BaseController);
+  const PageCL = _interopRequireDefault(__PageCL);
+  const formatter = _interopRequireDefault(__formatter);
   /**
    * @namespace skillmatrixui.controller
    */
   const Homepage = BaseController.extend("skillmatrixui.controller.Homepage", {
-    /*eslint-disable @typescript-eslint/no-empty-function*/onInit: function _onInit() {},
+    constructor: function constructor() {
+      BaseController.prototype.constructor.apply(this, arguments);
+      this.formatter = formatter;
+    },
+    /*eslint-disable @typescript-eslint/no-empty-function*/onInit: function _onInit() {
+      const page = new PageCL(this, Routes.HOMEPAGE);
+      page.initialize();
+    },
     onBeforeRendering: function _onBeforeRendering() {
       this.setSkillMatrixData();
+    },
+    onObjectMatched: function _onObjectMatched() {
+      const oDataModel = this.getComponentModel();
+      oDataModel.attachRequestFailed({}, this.onODataRequestFail, this);
+    },
+    onODataRequestFail: function _onODataRequestFail(event) {
+      const view = this.getView();
+      // this.openMessagePopover();
+
+      if (event.getParameter("statusCode") === "401") {
+        view.byId("skillMatrixTable").setBusy(false);
+      }
     },
     _handleSuccess: function _handleSuccess(oData) {
       // Handle the success case, for example, set data to a model

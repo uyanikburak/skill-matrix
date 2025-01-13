@@ -3,32 +3,48 @@ import ODataModel from "sap/ui/model/odata/v2/ODataModel";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import MessageToast from "sap/m/MessageToast";
 import { IBindingParams, ISubmitChangeResponse, Routes } from "../types/global.types";
-import SmartTable, { SmartTable$BeforeRebindTableEvent, SmartTable$InitialiseEvent } from "sap/ui/comp/smarttable/SmartTable";
-import { EntitySet } from "sap/ui/model/analytics/odata4analytics";
 import {  } from "sap/m/Table";
-import oControlEvent  from "sap/ui/core/Control";
 import { ISkillMatrix, ISkillMatrixCombined } from "../types/global.types"
 import Table from "sap/m/Table";
 import { ListBase$ItemPressEvent } from  "sap/m/ListBase";
 import ColumnListItem from "sap/m/ColumnListItem";
 import Column from "sap/m/Column";
 import Label from "sap/m/Label";
-import { foreach } from "@sap/cds";
 import Text from "sap/m/Text";
-import * as path from "path";
 import BaseController from "./BaseController";
+import PageCL from "skillmatrixui/util/common/PageCL";
+import formatter from "skillmatrixui/model/formatter";
+import { IPage } from "skillmatrixui/util/common/common.types";
+import { Model$RequestFailedEvent } from "sap/ui/model/Model";
+import View from "sap/ui/core/mvc/View";
+
 /**
  * @namespace skillmatrixui.controller
  */
-export default class Homepage extends BaseController {
-
+export default class Homepage extends BaseController implements IPage{
+    public formatter = formatter;
     /*eslint-disable @typescript-eslint/no-empty-function*/
     public onInit(): void {
-
+        const page = new PageCL<Homepage>(this,Routes.HOMEPAGE);
+        page.initialize();
     }
 
     public onBeforeRendering(): void | undefined {
         this.setSkillMatrixData()
+    }
+
+    public onObjectMatched(): void {
+        const oDataModel = this.getComponentModel();
+        oDataModel.attachRequestFailed({}, this.onODataRequestFail, this);
+    }
+
+    public onODataRequestFail(event: Model$RequestFailedEvent): void {
+        const view = this.getView() as View;
+        // this.openMessagePopover();
+
+        if (event.getParameter("statusCode") === "401") {
+            (view.byId("skillMatrixTable") as Table).setBusy(false);
+        }
     }
 
     private _handleSuccess(oData: ISkillMatrix[]): void {

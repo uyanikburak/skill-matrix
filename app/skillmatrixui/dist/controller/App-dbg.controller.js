@@ -15,6 +15,22 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "skillmatrixui/types/global.types"]
     getUIComponent: function _getUIComponent() {
       return this.getOwnerComponent();
     },
+    onNavToView: function _onNavToView(target) {
+      this.router.navTo(target);
+    },
+    onFclStateChanged: function _onFclStateChanged(event) {
+      const isNavigationArrow = event.getParameter("isNavigationArrow");
+      const layout = event.getParameter("layout");
+      this.updateButtonVisibilities();
+
+      // Replace the URL with the new layout if a navigation arrow was used
+      if (isNavigationArrow) {
+        this.router.navTo(this.currentRoute, {
+          layout: layout,
+          personnelID: this.currentPersonnelID
+        }, true);
+      }
+    },
     onRouteMatched: function _onRouteMatched(event) {
       const routeName = event.getParameter("name");
       const routingArgs = event.getParameter("arguments");
@@ -33,6 +49,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "skillmatrixui/types/global.types"]
       }
       this.changePageLabel(event);
       this.currentRoute = routeName;
+      this.currentPersonnelID = routingArgs.personnelID || "";
     },
     changePageLabel: function _changePageLabel(event) {
       const routeName = event.getParameter("name");
@@ -46,6 +63,11 @@ sap.ui.define(["sap/ui/core/mvc/Controller", "skillmatrixui/types/global.types"]
     },
     getResourceBundle: function _getResourceBundle() {
       return this.getUIComponent().getModel("i18n").getResourceBundle();
+    },
+    updateButtonVisibilities: function _updateButtonVisibilities() {
+      const fclModel = this.getUIComponent().getModel("fclModel");
+      const uiState = this.getUIComponent().getFclSemanticHelper().getCurrentUIState();
+      fclModel.setData(uiState);
     }
   });
   return App;

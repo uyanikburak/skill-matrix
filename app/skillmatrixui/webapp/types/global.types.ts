@@ -11,19 +11,8 @@ export enum ApplicationModels {
 
 export enum Routes {
     HOMEPAGE = "RouteHomepage",
-    PERSONNELS = "RoutePersonnels",
-    ENGAGEMENTS = "RouteEngagements",
-    TEAMS = "RouteTeams",
-    FORECAST = "RouteForecast",
-    ANALYTICS = "RouteAnalytics",
-    UTILIZATION = "RouteUtilization",
-    REVENUE = "RouteRevenue",
-    GENERATOR = "RouteGenerator",
-    CHECK = "RouteTimesheetCheck",
-    LOGS = "RouteAppLogs",
-    MAPPINGS = "RouteMappings",
-    VISIBILITY = "RouteVisibility",
-    CONFIGURATIONS = "RouteConfigurations"
+    PERSONNELDETAILS = "RoutePersonnels",
+    ADMINISTRATION = "RouteAdministration",
 }
 
 export enum FioriThemes {
@@ -172,4 +161,9 @@ export interface IPersonnels {
     teamID: string;
 }
 
-
+export interface ISkills {
+    ID: string;
+    name: string;
+    description: string;
+    fieldID: string;
+}
