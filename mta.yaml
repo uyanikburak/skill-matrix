@@ -17,9 +17,10 @@ modules:
       buildpack: nodejs_buildpack
     build-parameters:
       builder: npm
+
   - name: skill-matrix
     type: approuter.nodejs
-    path: app/router
+    path: approuter
     requires:
       - name: srv-api
         group: destinations
@@ -34,6 +35,7 @@ modules:
           forwardAuthToken: false
           name: ui5
           url: https://ui5.sap.com
+      - name: skill-matrix-html5-runtime 
     parameters:
       disk-quota: 256M
       keep-existing-routes: true
@@ -85,7 +87,48 @@ modules:
       - name: skill-matrix-db
     parameters:
       buildpack: nodejs_buildpack
+
+    # --------------------- HTML5DEPLOYER MODULE -----------------
+  - name: skill-matrix-hmtl5-deployer
+  # ------------------------------------------------------------
+    type: com.sap.html5.application-content
+    path: html5Deployer
+    requires:
+    - name: skill-matrix-html5-host
+    build-parameters:
+      requires:
+        - name: skill-matrix-app
+          artifacts:
+           - './*'
+          target-path: resources/app
+  # --------------------- REACT APP MODULE ---------------------
+  - name: skill-matrix-app
+  # ------------------------------------------------------------
+    type: html5
+    path: app
+    build-parameters:
+      supported-platforms: []
+      build-result: build        # This is the folder containing the build files
+
+
 resources:
+  # --------------------- HTML5 Runtime ----------------------
+  - name: skill-matrix-html5-runtime
+  # ------------------------------------------------------------
+    parameters:
+      service-name: skill-matrix-html5-runtime
+      service-plan: app-runtime
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+
+# --------------------- HTML5 Host -------------------------
+  - name: skill-matrix-html5-host
+# ----------------------------------------------------------
+    parameters:
+      service-name: skill-matrix-html5-host
+      service-plan: app-host
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
   - name: skill-matrix-auth
     type: org.cloudfoundry.managed-service
     parameters:
@@ -141,3 +184,6 @@ build-parameters:
     - builder: custom
       commands:
         - npx cds build --production
+        - npm --prefix ./app install ./app 
+        - npm run build --prefix ./app
+

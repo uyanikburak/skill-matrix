@@ -1,14 +1,20 @@
 {
-  "xsappname": "skill-matrix",
+  "xsappname": "skillmatrix-approuter",
   "tenant-mode": "dedicated",
-  "scopes": [],
-  "attributes": [],
-  "role-templates": [],
-  "oauth2-configuration": {
-    "redirect-uris": [
-      "https://port1299-workspaces-ws-9fzmf.eu10.applicationstudio.cloud.sap/login/callback",
-      "https://*.eu10.hana.ondemand.com/**",
-      "http://localhost:1299/login/callback"
-    ]
-  }
+  "description": "Security profile of called application",
+  "scopes": [
+    {
+      "name": "uaa.user",
+      "description": "UAA"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "Token_Exchange",
+      "description": "UAA",
+      "scope-references": [
+        "uaa.user"
+      ]
+    }
+  ]
 }

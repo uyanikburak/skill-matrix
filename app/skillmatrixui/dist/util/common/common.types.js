@@ -1,2 +1,0 @@
-"use strict";sap.ui.define([],function(){"use strict";var e=function(e){e[e["SMART"]=0]="SMART";e[e["SIMPLE"]=1]="SIMPLE";return e}(e||{});var r={__esModule:true};r.FormTypes=e;return r});
-//# sourceMappingURL=common.types.js.map
